@@ -2,13 +2,13 @@ package com.soundcloud.android.crop;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
+import android.support.v4.app.Fragment;
 import android.widget.Toast;
 
 import com.soundcloud.android.crop.util.VisibleForTesting;
@@ -27,6 +27,8 @@ public class Crop {
         String ASPECT_Y = "aspect_y";
         String MAX_X = "max_x";
         String MAX_Y = "max_y";
+        String OUT_X = "out_x";
+        String OUT_Y = "out_y";
         String ERROR = "error";
     }
 
@@ -86,6 +88,18 @@ public class Crop {
     }
 
     /**
+     * Set the out size of the image
+     *
+     * @param width Out bitmap width
+     * @param height Out bitmap height
+     */
+    public Crop withOutputSize(int width, int height) {
+        cropIntent.putExtra(Extra.OUT_X, width);
+        cropIntent.putExtra(Extra.OUT_Y, height);
+        return this;
+    }
+
+    /**
      * Send the crop Intent!
      *
      * @param activity Activity that will receive result
@@ -97,12 +111,34 @@ public class Crop {
     /**
      * Send the crop Intent!
      *
+     * @param activity Activity that will receive result
+     * @param requestCode Activity request code
+     */
+    public void start(Activity activity, int requestCode) {
+        activity.startActivityForResult(getIntent(activity), requestCode);
+    }
+
+    /**
+     * Send the crop Intent!
+     *
      * @param context Context
      * @param fragment Fragment that will receive result
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void start(Context context, Fragment fragment) {
         fragment.startActivityForResult(getIntent(context), REQUEST_CROP);
+    }
+
+    /**
+     * Send the crop Intent!
+     *
+     * @param context Context
+     * @param fragment Fragment that will receive result
+     * @param requestCode Activity request code
+     */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    public void start(Context context, Fragment fragment, int requestCode) {
+        fragment.startActivityForResult(getIntent(context), requestCode);
     }
 
     @VisibleForTesting

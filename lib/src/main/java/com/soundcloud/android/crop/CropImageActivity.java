@@ -23,6 +23,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.BitmapRegionDecoder;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.net.Uri;
@@ -57,6 +58,8 @@ public class CropImageActivity extends MonitoredActivity {
     // Output image size
     private int maxX;
     private int maxY;
+    private int outX;
+    private int outY;
     private int exifRotation;
 
     private Uri sourceUri;
@@ -118,6 +121,8 @@ public class CropImageActivity extends MonitoredActivity {
             aspectY = extras.getInt(Crop.Extra.ASPECT_Y);
             maxX = extras.getInt(Crop.Extra.MAX_X);
             maxY = extras.getInt(Crop.Extra.MAX_Y);
+            outX = extras.getInt(Crop.Extra.OUT_X);
+            outY = extras.getInt(Crop.Extra.OUT_Y);
             saveUri = extras.getParcelable(MediaStore.EXTRA_OUTPUT);
         }
 
@@ -305,7 +310,32 @@ public class CropImageActivity extends MonitoredActivity {
                 imageView.highlightViews.clear();
             }
         }
-        saveImage(croppedImage);
+
+        if( outX > 0 && outY > 0 ) {
+            saveImage( resizeImage(croppedImage) );
+        } else {
+            saveImage(croppedImage);
+        }
+
+    }
+
+    private Bitmap resizeImage(Bitmap croppedImage) {
+        if (outX <= 0 && outY <= 0)
+            return null;
+
+        Bitmap outBitmap = Bitmap.createBitmap(outX, outY, Bitmap.Config.RGB_565);
+
+        Rect src = new Rect(0, 0, croppedImage.getWidth(), croppedImage.getHeight());
+        RectF dst = new RectF(0, 0, outX, outY);
+
+        Paint mDrawPaint = new Paint();
+        mDrawPaint.setAntiAlias(true);
+        mDrawPaint.setDither(true);
+
+        Canvas canvas = new Canvas(outBitmap);
+        canvas.drawBitmap(croppedImage, src, dst, mDrawPaint);
+
+        return outBitmap;
     }
 
     private void saveImage(Bitmap croppedImage) {
