@@ -489,7 +489,10 @@ public class CropImageActivity extends MonitoredActivity {
     }
 
     private void setResultUri(Uri uri) {
-        setResult(RESULT_OK, new Intent().putExtra(MediaStore.EXTRA_OUTPUT, uri));
+        Intent intent = new Intent();
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+        intent.setData( uri );
+        setResult(RESULT_OK, intent);
     }
 
     private void setResultException(Throwable throwable) {
