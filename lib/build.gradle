@@ -6,9 +6,8 @@ apply plugin: 'signing'
 archivesBaseName = 'android-crop'
 
 android {
-
-    compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion 23
+    buildToolsVersion '23.0.1'
 
     defaultConfig {
         minSdkVersion 9
@@ -26,6 +25,6 @@ dependencies {
     androidTestCompile 'org.mockito:mockito-core:1.9.5'
     androidTestCompile 'com.google.dexmaker:dexmaker:1.0'
     androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.0'
-    compile 'com.android.support:support-v4:21.0.3'
+    compile 'com.android.support:support-v4:23.0.1'
 }
 
